@@ -1,16 +1,15 @@
 import React from 'react';
+import { eliminarUsuario, actualizarUsuario } from '../services/api';
 
 const Tabla = ({ entrada, entradas, setListUpdated }) => {
 
-    const handleDelete = id => {
+    const handleDelete = async id => {
 
-        const requestInit = {
-            method: 'DELETE'
-        };
+        const { ok, data } = await eliminarUsuario(id);
 
-        fetch('http://localhost:8000/api/usuarios/' + id, requestInit)
-            .then(res => res.text())
-            .then(res => console.log(res));
+        if (!ok) {
+            console.log(data?.msg);
+        }
 
         setListUpdated(true);
 
@@ -26,7 +25,7 @@ const Tabla = ({ entrada, entradas, setListUpdated }) => {
         ciudad
     } = entrada;
 
-    const handleUpdate = id => {
+    const handleUpdate = async id => {
 
         telefonos = parseInt(telefonos, 10);
         celular = parseInt(celular, 10);
@@ -47,17 +46,11 @@ const Tabla = ({ entrada, entradas, setListUpdated }) => {
 
         }
 
-        const requestInit = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(entrada)
-        };
+        const { ok, data } = await actualizarUsuario(id, entrada);
 
-        fetch('http://localhost:8000/api/usuarios/' + id, requestInit)
-            .then(res => res.text())
-            .then(res => console.log(res));
+        if (!ok) {
+            console.log(data?.msg);
+        }
 
         setListUpdated(true);
 
@@ -65,7 +58,7 @@ const Tabla = ({ entrada, entradas, setListUpdated }) => {
 
     return (
 
-        <table className='table'>
+        <table className='table' data-testid="tabla-contactos">
 
             <thead>
 
@@ -86,7 +79,7 @@ const Tabla = ({ entrada, entradas, setListUpdated }) => {
 
                 {entradas.map((entrada) => (
 
-                    <tr key={entrada.id}>
+                    <tr key={entrada.id} data-testid={`fila-contacto-${entrada.id}`}>
 
                         <td>{entrada.nombres}</td>
                         <td>{entrada.apellidos}</td>
@@ -103,6 +96,7 @@ const Tabla = ({ entrada, entradas, setListUpdated }) => {
                                 <button
                                     onClick={() => handleDelete(entrada.id)}
                                     className='btn btn-danger'
+                                    data-testid={`btn-borrar-${entrada.id}`}
                                 >
                                     Borrar
                                 </button>
@@ -110,6 +104,7 @@ const Tabla = ({ entrada, entradas, setListUpdated }) => {
                                 <button
                                     onClick={() => handleUpdate(entrada.id)}
                                     className='btn btn-dark'
+                                    data-testid={`btn-editar-${entrada.id}`}
                                 >
                                     Editar
                                 </button>

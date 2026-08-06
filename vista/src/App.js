@@ -1,21 +1,28 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useCallback } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import Tabla from './Components/Tabla';
 import Form from './Components/Form';
+import ProtectedRoute from './Components/ProtectedRoute';
+import Login from './pages/Login';
+import { AuthProvider } from './context/AuthContext';
+import { getUsuarios } from './services/api';
 import './App.css';
 
-function App() {
+const ENTRADA_VACIA = {
+  nombres: '',
+  apellidos: '',
+  correo: '',
+  telefonos: 0,
+  celular: 0,
+  direccion: '',
+  ciudad: ''
+};
+
+const Contactos = () => {
 
   // estado del formulario
-  const [entrada, setEntrada] = useState({
-    nombres: '',
-    apellidos: '',
-    correo: '',
-    telefonos: 0,
-    celular: 0,
-    direccion: '',
-    ciudad: ''
-  });
+  const [entrada, setEntrada] = useState(ENTRADA_VACIA);
 
   // lista de contactos
   const [entradas, setEntradas] = useState([]);
@@ -23,40 +30,23 @@ function App() {
   // actualizar tabla
   const [listUpdated, setListUpdated] = useState(false);
 
+  const cargarEntradas = useCallback(async () => {
+
+    const { ok, data } = await getUsuarios();
+
+    if (ok) {
+      setEntradas(data.data);
+    } else {
+      console.log(data?.msg);
+    }
+
+  }, []);
+
   // obtener contactos
   useEffect(() => {
-
-    const getEntradas = async () => {
-
-      try {
-
-        const response = await fetch('http://localhost:8000/api/usuarios');
-
-        const result = await response.json();
-
-        if (response.ok) {
-
-          setEntradas(result.data);
-
-        } else {
-
-          console.log(result.msg);
-
-        }
-
-      } catch (error) {
-
-        console.log('Error al obtener usuarios:', error);
-
-      }
-
-    };
-
-    getEntradas();
-
+    cargarEntradas();
     setListUpdated(false);
-
-  }, [listUpdated]);
+  }, [listUpdated, cargarEntradas]);
 
   return (
 
@@ -101,6 +91,7 @@ function App() {
               <Form
                 entrada={entrada}
                 setEntrada={setEntrada}
+                setListUpdated={setListUpdated}
               />
 
             </div>
@@ -115,6 +106,24 @@ function App() {
 
   );
 
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Contactos />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </AuthProvider>
+  );
 }
 
 export default App;

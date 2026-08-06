@@ -118,6 +118,44 @@ body{
   margin-bottom:14px !important;
 }
 
+.navbar-content{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.navbar-user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:white;
+  font-size:0.9rem;
+}
+
+.login-container{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eef2f7;
+  padding:20px;
+}
+
+.login-card{
+  background:white;
+  border-radius:18px;
+  padding:32px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.08);
+  width:100%;
+  max-width:380px;
+}
+
+.login-error{
+  color:#ff4d4f;
+  font-size:0.85rem;
+  margin-bottom:10px;
+}
+
 @media(max-width:1200px){
 
   .section-title{
