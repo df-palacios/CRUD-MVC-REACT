@@ -1,8 +1,10 @@
-import React from 'react';
-import { crearUsuario } from '../services/api';
+import React, { useState } from 'react';
+import { crearUsuario, actualizarUsuario } from '../services/api';
 
 //esta funcion modifica el estado de una entrada de la libreta cuando se detecta un cambio en el formulario (evento)
-const Form = ({ entrada, setEntrada, setListUpdated }) => {
+const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar }) => {
+
+    const [error, setError] = useState(null);
 
     const handleChange = e => {
         setEntrada({
@@ -15,34 +17,31 @@ const Form = ({ entrada, setEntrada, setListUpdated }) => {
 
     const handleSubmit = async e => {
         e.preventDefault();
+        setError(null);
 
         telefonos = parseInt(telefonos, 10)
         celular = parseInt(celular, 10)
         //validación de los datos
         if (nombres === '' || apellidos === '' || correo === '' || direccion === '' || ciudad === '' || telefonos <= 0 || celular <= 0) {
-            alert('Todos los campos son obligatorios')
+            setError('Todos los campos son obligatorios');
             return
         }
 
-        const { ok, data } = await crearUsuario({ ...entrada, telefonos, celular });
+        const payload = { ...entrada, telefonos, celular };
+
+        const { ok, data } = modoEdicionId
+            ? await actualizarUsuario(modoEdicionId, payload)
+            : await crearUsuario(payload);
 
         if (!ok) {
-            alert(data?.msg || 'No se pudo crear el contacto');
+            setError(data?.msg || 'No se pudo guardar el contacto');
             return;
         }
 
-        //deja en blanco el state luego de que se hayan agregado los datos
-        setEntrada({
-            nombres: '',
-            apellidos: '',
-            correo: '',
-            telefonos: 0,
-            celular: 0,
-            direccion: '',
-            ciudad: ''
-        })
+        // limpia el formulario y sale del modo edición si estaba activo
+        onCancelar();
 
-        // refresca la tabla para que el nuevo contacto aparezca
+        // refresca la tabla para que el cambio aparezca
         setListUpdated(true);
 
     }
@@ -77,7 +76,30 @@ const Form = ({ entrada, setEntrada, setListUpdated }) => {
                 <label htmlFor="ciudadId" className="form-label">Ciudad</label>
                 <input value={ciudad} name="ciudad" onChange={handleChange} type="text" id="ciudadId" className="form-control" data-testid="input-ciudad" />
             </div>
-            <button type="submit" className="btn btn-primary" data-testid="btn-enviar">Enviar</button>
+
+            {error && (
+                <p className="form-error" role="alert" data-testid="form-error">{error}</p>
+            )}
+
+            <div className="form-buttons">
+
+                <button type="submit" className="btn btn-primary" data-testid="btn-enviar">
+                    {modoEdicionId ? 'Guardar cambios' : 'Enviar'}
+                </button>
+
+                {modoEdicionId && (
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={onCancelar}
+                        data-testid="btn-cancelar-edicion"
+                    >
+                        Cancelar
+                    </button>
+                )}
+
+            </div>
+
         </form>
     );
 }

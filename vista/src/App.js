@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useCallback } from 'react';
+import React, { Fragment, useState, useEffect, useCallback, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import Tabla from './Components/Tabla';
@@ -24,11 +24,16 @@ const Contactos = () => {
   // estado del formulario
   const [entrada, setEntrada] = useState(ENTRADA_VACIA);
 
+  // id del contacto que se está editando (null = modo "crear")
+  const [modoEdicionId, setModoEdicionId] = useState(null);
+
   // lista de contactos
   const [entradas, setEntradas] = useState([]);
 
   // actualizar tabla
   const [listUpdated, setListUpdated] = useState(false);
+
+  const formRef = useRef(null);
 
   const cargarEntradas = useCallback(async () => {
 
@@ -47,6 +52,25 @@ const Contactos = () => {
     cargarEntradas();
     setListUpdated(false);
   }, [listUpdated, cargarEntradas]);
+
+  // al tocar "Editar" en una fila/tarjeta: carga esos datos en el formulario
+  // y lleva la vista hasta él (clave en móvil, donde el form queda abajo)
+  const handleEditar = (contacto) => {
+
+    const { id, ...datos } = contacto;
+
+    setEntrada(datos);
+    setModoEdicionId(id);
+
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  };
+
+  // limpia el formulario y sale del modo edición (botón Cancelar, o tras guardar)
+  const handleCancelarEdicion = () => {
+    setEntrada(ENTRADA_VACIA);
+    setModoEdicionId(null);
+  };
 
   return (
 
@@ -69,9 +93,9 @@ const Contactos = () => {
               <div className="table-responsive">
 
                 <Tabla
-                  entrada={entrada}
                   entradas={entradas}
                   setListUpdated={setListUpdated}
+                  onEditar={handleEditar}
                 />
 
               </div>
@@ -80,18 +104,20 @@ const Contactos = () => {
 
           </div>
 
-          <div className="col-lg-4">
+          <div className="col-lg-4" ref={formRef}>
 
-            <div className="card-custom">
+            <div className={`card-custom ${modoEdicionId ? 'card-custom-editando' : ''}`}>
 
               <h2 className="section-title">
-                Agregar contacto
+                {modoEdicionId ? 'Editar contacto' : 'Agregar contacto'}
               </h2>
 
               <Form
                 entrada={entrada}
                 setEntrada={setEntrada}
                 setListUpdated={setListUpdated}
+                modoEdicionId={modoEdicionId}
+                onCancelar={handleCancelarEdicion}
               />
 
             </div>
