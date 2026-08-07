@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import { eliminarUsuario } from '../services/api';
-
-// color estable a partir del nombre, para el avatar de iniciales
-const COLORES = ['#4f8cff', '#00b894', '#e17055', '#a29bfe', '#fd79a8', '#fdcb6e', '#00cec9'];
-
-const colorDe = (texto = '') => {
-    let suma = 0;
-    for (let i = 0; i < texto.length; i++) suma += texto.charCodeAt(i);
-    return COLORES[suma % COLORES.length];
-};
-
-const iniciales = (nombres = '', apellidos = '') =>
-    `${(nombres[0] || '')}${(apellidos[0] || '')}`.toUpperCase() || '?';
+import { colorDe, iniciales } from '../utils/avatar';
 
 const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
@@ -31,26 +20,24 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
     };
 
     if (entradas.length === 0) {
-        return <p className='lista-vacia'>No hay contactos para mostrar.</p>;
+        return <p className='lista-vacia'>No hay contactos que coincidan.</p>;
     }
 
     return (
 
         <>
-            {/* Tabla clásica: solo en pantallas medianas/grandes (>= 768px) */}
+            {/* Tabla: solo en pantallas medianas/grandes (>= 768px) */}
             <table className='table d-none d-md-table' data-testid="tabla-contactos">
 
                 <thead>
 
                     <tr>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Correo</th>
-                        <th>Teléfonos</th>
-                        <th>Celular</th>
+                        <th>Contacto</th>
+                        <th className='col-num'>Teléfono</th>
+                        <th className='col-num'>Celular</th>
                         <th>Dirección</th>
                         <th>Ciudad</th>
-                        <th>Acciones</th>
+                        <th className='col-acciones'>Acciones</th>
                     </tr>
 
                 </thead>
@@ -61,32 +48,51 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
                         <tr key={entrada.id} data-testid={`fila-contacto-${entrada.id}`}>
 
-                            <td>{entrada.nombres}</td>
-                            <td>{entrada.apellidos}</td>
-                            <td>{entrada.correo}</td>
-                            <td>{entrada.telefonos}</td>
-                            <td>{entrada.celular}</td>
-                            <td>{entrada.direccion}</td>
-                            <td>{entrada.ciudad}</td>
+                            {/* celda de identidad: avatar + nombre + correo */}
+                            <td>
+                                <div className='identidad'>
+
+                                    <span
+                                        className='avatar'
+                                        style={{ background: colorDe(entrada.nombres + entrada.apellidos) }}
+                                        aria-hidden='true'
+                                    >
+                                        {iniciales(entrada.nombres, entrada.apellidos)}
+                                    </span>
+
+                                    <span className='identidad-texto'>
+                                        <span className='identidad-nombre'>
+                                            {entrada.nombres} {entrada.apellidos}
+                                        </span>
+                                        <span className='identidad-correo'>{entrada.correo}</span>
+                                    </span>
+
+                                </div>
+                            </td>
+
+                            <td className='col-num'>{entrada.telefonos}</td>
+                            <td className='col-num'>{entrada.celular}</td>
+                            <td className='celda-suave'>{entrada.direccion}</td>
+                            <td><span className='chip-ciudad'>{entrada.ciudad}</span></td>
 
                             <td>
 
                                 <div className='actions'>
 
                                     <button
-                                        onClick={() => handleDelete(entrada.id)}
-                                        className='btn btn-danger'
-                                        data-testid={`btn-borrar-${entrada.id}`}
-                                    >
-                                        Borrar
-                                    </button>
-
-                                    <button
                                         onClick={() => onEditar(entrada)}
-                                        className='btn btn-dark'
+                                        className='btn btn-ghost'
                                         data-testid={`btn-editar-${entrada.id}`}
                                     >
                                         Editar
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleDelete(entrada.id)}
+                                        className='btn btn-ghost btn-ghost-peligro'
+                                        data-testid={`btn-borrar-${entrada.id}`}
+                                    >
+                                        Borrar
                                     </button>
 
                                 </div>
@@ -124,7 +130,7 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
                             >
 
                                 <span
-                                    className='contacto-avatar'
+                                    className='avatar'
                                     style={{ background: colorDe(entrada.nombres + entrada.apellidos) }}
                                     aria-hidden='true'
                                 >
@@ -157,13 +163,13 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
                                     </div>
 
                                     <div className='detalle-campo'>
-                                        <span className='detalle-label'>Teléfonos</span>
-                                        {entrada.telefonos}
+                                        <span className='detalle-label'>Teléfono</span>
+                                        <span className='col-num'>{entrada.telefonos}</span>
                                     </div>
 
                                     <div className='detalle-campo'>
                                         <span className='detalle-label'>Celular</span>
-                                        {entrada.celular}
+                                        <span className='col-num'>{entrada.celular}</span>
                                     </div>
 
                                     <div className='detalle-campo'>
@@ -175,14 +181,14 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
                                         <button
                                             onClick={() => onEditar(entrada)}
-                                            className='btn btn-dark'
+                                            className='btn btn-primary'
                                         >
                                             Editar
                                         </button>
 
                                         <button
                                             onClick={() => handleDelete(entrada.id)}
-                                            className='btn btn-danger'
+                                            className='btn btn-ghost btn-ghost-peligro'
                                         >
                                             Borrar
                                         </button>

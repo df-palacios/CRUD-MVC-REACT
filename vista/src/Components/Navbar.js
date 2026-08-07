@@ -6,22 +6,24 @@ const Navbar = ({ brand }) => {
     const { usuario, estaAutenticado, logout } = useAuth();
 
     return (
-        <nav className="navbar navbar-custom">
-            <div className="container navbar-content">
-                <a href="#!" className="navbar-brand">{brand}</a>
+        <nav className="topbar">
+            <div className="topbar-inner">
+
+                <span className="wordmark">{brand}</span>
 
                 {estaAutenticado && (
-                    <div className="navbar-user" data-testid="navbar-usuario">
-                        <span>{usuario}</span>
+                    <div className="topbar-user" data-testid="navbar-usuario">
+                        <span className="topbar-user-nombre">{usuario}</span>
                         <button
                             onClick={logout}
-                            className="btn btn-outline-light btn-sm"
+                            className="btn btn-ghost btn-ghost-claro"
                             data-testid="btn-logout"
                         >
                             Salir
                         </button>
                     </div>
                 )}
+
             </div>
         </nav>
     );

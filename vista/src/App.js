@@ -132,18 +132,26 @@ const Contactos = () => {
 
             <div className="card-custom">
 
-              <h2 className="section-title d-none d-lg-block">
-                Contactos
-              </h2>
+              <div className="panel-header">
 
-              <input
-                type="search"
-                className="form-control buscador"
-                placeholder="Buscar por nombre, correo o ciudad..."
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                data-testid="input-buscar"
-              />
+                <div className="panel-titulo">
+                  <span className="eyebrow">Directorio</span>
+                  <h2 className="panel-h2">
+                    Contactos
+                    <span className="conteo">{entradasFiltradas.length}</span>
+                  </h2>
+                </div>
+
+                <input
+                  type="search"
+                  className="form-control buscador"
+                  placeholder="Buscar por nombre, correo o ciudad"
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  data-testid="input-buscar"
+                />
+
+              </div>
 
               <Tabla
                 entradas={entradasFiltradas}
@@ -157,11 +165,14 @@ const Contactos = () => {
 
           <div className={`col-lg-4 ${tab === 'form' ? '' : 'tab-oculto'}`}>
 
-            <div className={`card-custom ${modoEdicionId ? 'card-custom-editando' : ''}`}>
+            <div className={`card-custom rail ${modoEdicionId ? 'card-custom-editando' : ''}`}>
 
-              <h2 className="section-title">
-                {modoEdicionId ? 'Editar contacto' : 'Agregar contacto'}
-              </h2>
+              <div className="panel-titulo panel-titulo-rail">
+                <span className="eyebrow">{modoEdicionId ? 'Editando' : 'Nuevo'}</span>
+                <h2 className="panel-h2">
+                  {modoEdicionId ? 'Editar contacto' : 'Agregar contacto'}
+                </h2>
+              </div>
 
               <Form
                 entrada={entrada}
