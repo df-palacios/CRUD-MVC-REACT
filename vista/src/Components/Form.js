@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { crearUsuario, actualizarUsuario } from '../services/api';
 
 //esta funcion modifica el estado de una entrada de la libreta cuando se detecta un cambio en el formulario (evento)
-const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar }) => {
+const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar, onGuardado }) => {
 
     const [error, setError] = useState(null);
 
@@ -38,8 +38,8 @@ const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar }
             return;
         }
 
-        // limpia el formulario y sale del modo edición si estaba activo
-        onCancelar();
+        // limpia el formulario, sale del modo edición y vuelve a la lista
+        onGuardado();
 
         // refresca la tabla para que el cambio aparezca
         setListUpdated(true);

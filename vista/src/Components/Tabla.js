@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { eliminarUsuario } from '../services/api';
 
+// color estable a partir del nombre, para el avatar de iniciales
+const COLORES = ['#4f8cff', '#00b894', '#e17055', '#a29bfe', '#fd79a8', '#fdcb6e', '#00cec9'];
+
+const colorDe = (texto = '') => {
+    let suma = 0;
+    for (let i = 0; i < texto.length; i++) suma += texto.charCodeAt(i);
+    return COLORES[suma % COLORES.length];
+};
+
+const iniciales = (nombres = '', apellidos = '') =>
+    `${(nombres[0] || '')}${(apellidos[0] || '')}`.toUpperCase() || '?';
+
 const Tabla = ({ entradas, setListUpdated, onEditar }) => {
+
+    // id de la fila desplegada en móvil (null = todas colapsadas)
+    const [expandidoId, setExpandidoId] = useState(null);
 
     const handleDelete = async id => {
 
@@ -15,10 +30,14 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
     };
 
+    if (entradas.length === 0) {
+        return <p className='lista-vacia'>No hay contactos para mostrar.</p>;
+    }
+
     return (
 
         <>
-            {/* Tabla clásica: solo se muestra en pantallas medianas/grandes (>= 768px) */}
+            {/* Tabla clásica: solo en pantallas medianas/grandes (>= 768px) */}
             <table className='table d-none d-md-table' data-testid="tabla-contactos">
 
                 <thead>
@@ -82,52 +101,105 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
             </table>
 
-            {/* Tarjetas: solo se muestran en pantallas chicas (< 768px) */}
-            <div className='d-md-none contactos-cards' data-testid="tabla-contactos-movil">
+            {/* Lista compacta desplegable: solo en pantallas chicas (< 768px) */}
+            <ul className='lista-contactos d-md-none' data-testid="lista-contactos-movil">
 
-                {entradas.map((entrada) => (
+                {entradas.map((entrada) => {
 
-                    <div className='contacto-card' key={entrada.id} data-testid={`fila-contacto-movil-${entrada.id}`}>
+                    const abierto = expandidoId === entrada.id;
 
-                        <div className='contacto-card-header'>
-                            <strong>{entrada.nombres} {entrada.apellidos}</strong>
-                            <span className='contacto-card-ciudad'>{entrada.ciudad}</span>
-                        </div>
+                    return (
 
-                        <div className='contacto-card-body'>
-                            <div><span className='contacto-card-label'>Correo</span>{entrada.correo}</div>
-                            <div><span className='contacto-card-label'>Teléfonos</span>{entrada.telefonos}</div>
-                            <div><span className='contacto-card-label'>Celular</span>{entrada.celular}</div>
-                            <div><span className='contacto-card-label'>Dirección</span>{entrada.direccion}</div>
-                        </div>
+                        <li
+                            className={`contacto-item ${abierto ? 'abierto' : ''}`}
+                            key={entrada.id}
+                            data-testid={`fila-contacto-movil-${entrada.id}`}
+                        >
 
-                        <div className='contacto-card-actions'>
-
+                            {/* fila compacta: siempre visible, se toca para desplegar */}
                             <button
-                                onClick={() => onEditar(entrada)}
-                                className='btn btn-dark'
+                                className='contacto-fila'
+                                onClick={() => setExpandidoId(abierto ? null : entrada.id)}
+                                aria-expanded={abierto}
                             >
-                                Editar
+
+                                <span
+                                    className='contacto-avatar'
+                                    style={{ background: colorDe(entrada.nombres + entrada.apellidos) }}
+                                    aria-hidden='true'
+                                >
+                                    {iniciales(entrada.nombres, entrada.apellidos)}
+                                </span>
+
+                                <span className='contacto-resumen'>
+                                    <span className='contacto-nombre'>
+                                        {entrada.nombres} {entrada.apellidos}
+                                    </span>
+                                    <span className='contacto-sub'>
+                                        {entrada.celular || entrada.telefonos} · {entrada.ciudad}
+                                    </span>
+                                </span>
+
+                                <span className={`contacto-chevron ${abierto ? 'rotado' : ''}`} aria-hidden='true'>
+                                    ⌄
+                                </span>
+
                             </button>
 
-                            <button
-                                onClick={() => handleDelete(entrada.id)}
-                                className='btn btn-danger'
-                            >
-                                Borrar
-                            </button>
+                            {/* detalle: solo cuando la fila está desplegada */}
+                            {abierto && (
 
-                        </div>
+                                <div className='contacto-detalle'>
 
-                    </div>
+                                    <div className='detalle-campo'>
+                                        <span className='detalle-label'>Correo</span>
+                                        {entrada.correo}
+                                    </div>
 
-                ))}
+                                    <div className='detalle-campo'>
+                                        <span className='detalle-label'>Teléfonos</span>
+                                        {entrada.telefonos}
+                                    </div>
 
-                {entradas.length === 0 && (
-                    <p className='contactos-cards-vacio'>Todavía no hay contactos.</p>
-                )}
+                                    <div className='detalle-campo'>
+                                        <span className='detalle-label'>Celular</span>
+                                        {entrada.celular}
+                                    </div>
 
-            </div>
+                                    <div className='detalle-campo'>
+                                        <span className='detalle-label'>Dirección</span>
+                                        {entrada.direccion}
+                                    </div>
+
+                                    <div className='detalle-acciones'>
+
+                                        <button
+                                            onClick={() => onEditar(entrada)}
+                                            className='btn btn-dark'
+                                        >
+                                            Editar
+                                        </button>
+
+                                        <button
+                                            onClick={() => handleDelete(entrada.id)}
+                                            className='btn btn-danger'
+                                        >
+                                            Borrar
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            )}
+
+                        </li>
+
+                    );
+
+                })}
+
+            </ul>
         </>
 
     );

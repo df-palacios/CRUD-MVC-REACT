@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useCallback, useRef } from 'react';
+import React, { Fragment, useState, useEffect, useCallback, useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import Tabla from './Components/Tabla';
@@ -33,7 +33,11 @@ const Contactos = () => {
   // actualizar tabla
   const [listUpdated, setListUpdated] = useState(false);
 
-  const formRef = useRef(null);
+  // texto del buscador
+  const [busqueda, setBusqueda] = useState('');
+
+  // pestaña activa (solo aplica en móvil; en desktop se ven las dos columnas)
+  const [tab, setTab] = useState('lista');
 
   const cargarEntradas = useCallback(async () => {
 
@@ -53,16 +57,29 @@ const Contactos = () => {
     setListUpdated(false);
   }, [listUpdated, cargarEntradas]);
 
-  // al tocar "Editar" en una fila/tarjeta: carga esos datos en el formulario
-  // y lleva la vista hasta él (clave en móvil, donde el form queda abajo)
+  // filtra por nombre, apellido, correo o ciudad
+  const entradasFiltradas = useMemo(() => {
+
+    const q = busqueda.trim().toLowerCase();
+
+    if (!q) return entradas;
+
+    return entradas.filter(({ nombres, apellidos, correo, ciudad }) =>
+      `${nombres} ${apellidos} ${correo} ${ciudad}`.toLowerCase().includes(q)
+    );
+
+  }, [entradas, busqueda]);
+
+  // al tocar "Editar": carga los datos en el formulario y salta a esa pestaña
   const handleEditar = (contacto) => {
 
     const { id, ...datos } = contacto;
 
     setEntrada(datos);
     setModoEdicionId(id);
+    setTab('form');
 
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
   };
 
@@ -70,6 +87,12 @@ const Contactos = () => {
   const handleCancelarEdicion = () => {
     setEntrada(ENTRADA_VACIA);
     setModoEdicionId(null);
+  };
+
+  // tras guardar con éxito: limpia y vuelve a la lista
+  const handleGuardado = () => {
+    handleCancelarEdicion();
+    setTab('lista');
   };
 
   return (
@@ -80,31 +103,59 @@ const Contactos = () => {
 
       <div className="main-container">
 
+        {/* Pestañas: solo se ven en móvil (en desktop hay espacio para las 2 columnas) */}
+        <div className="tabs-movil" role="tablist">
+
+          <button
+            className={`tab-boton ${tab === 'lista' ? 'activo' : ''}`}
+            onClick={() => setTab('lista')}
+            role="tab"
+            aria-selected={tab === 'lista'}
+          >
+            Contactos <span className="tab-badge">{entradas.length}</span>
+          </button>
+
+          <button
+            className={`tab-boton ${tab === 'form' ? 'activo' : ''}`}
+            onClick={() => setTab('form')}
+            role="tab"
+            aria-selected={tab === 'form'}
+          >
+            {modoEdicionId ? 'Editando' : 'Agregar'}
+          </button>
+
+        </div>
+
         <div className="row g-4">
 
-          <div className="col-lg-8">
+          <div className={`col-lg-8 ${tab === 'lista' ? '' : 'tab-oculto'}`}>
 
             <div className="card-custom">
 
-              <h2 className="section-title">
+              <h2 className="section-title d-none d-lg-block">
                 Contactos
               </h2>
 
-              <div className="table-responsive">
+              <input
+                type="search"
+                className="form-control buscador"
+                placeholder="Buscar por nombre, correo o ciudad..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                data-testid="input-buscar"
+              />
 
-                <Tabla
-                  entradas={entradas}
-                  setListUpdated={setListUpdated}
-                  onEditar={handleEditar}
-                />
-
-              </div>
+              <Tabla
+                entradas={entradasFiltradas}
+                setListUpdated={setListUpdated}
+                onEditar={handleEditar}
+              />
 
             </div>
 
           </div>
 
-          <div className="col-lg-4" ref={formRef}>
+          <div className={`col-lg-4 ${tab === 'form' ? '' : 'tab-oculto'}`}>
 
             <div className={`card-custom ${modoEdicionId ? 'card-custom-editando' : ''}`}>
 
@@ -118,6 +169,7 @@ const Contactos = () => {
                 setListUpdated={setListUpdated}
                 modoEdicionId={modoEdicionId}
                 onCancelar={handleCancelarEdicion}
+                onGuardado={handleGuardado}
               />
 
             </div>

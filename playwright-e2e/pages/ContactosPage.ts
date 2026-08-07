@@ -48,13 +48,16 @@ export class ContactosPage {
     }
 
     /**
-     * La app edita así: escribes en el formulario los valores NUEVOS y
-     * le das "Editar" a la fila específica que quieres sobreescribir.
+     * Flujo nuevo: se toca "Editar" en la fila (eso carga el contacto en el
+     * formulario), se sobreescriben los campos, y se confirma con
+     * "Guardar cambios".
      */
     async editarContacto(correoActual: string, datosNuevos: Contacto) {
-        await this.llenarFormulario(datosNuevos);
         const fila = this.filaPorCorreo(correoActual);
         await fila.getByRole('button', { name: 'Editar' }).click();
+
+        await this.llenarFormulario(datosNuevos);
+        await this.page.getByTestId('btn-enviar').click();
     }
 
     async borrarContacto(correo: string) {

@@ -183,69 +183,173 @@ body{
   outline-offset:-2px;
 }
 
-/* --- tarjetas de contacto (vista móvil) --- */
+/* --- pestañas (solo móvil) --- */
 
-.contactos-cards{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.contacto-card{
-  border:1px solid #e8edf3;
-  border-radius:14px;
-  padding:14px;
-}
-
-.contacto-card-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:baseline;
+.tabs-movil{
+  display:none;
   gap:8px;
-  margin-bottom:10px;
-  font-size:1.05rem;
+  margin-bottom:14px;
+  background:#e2e8f2;
+  padding:5px;
+  border-radius:14px;
+}
+
+.tab-boton{
+  flex:1;
+  border:none;
+  background:transparent;
+  padding:11px 8px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:0.95rem;
+  color:#5a6b85;
+  transition:0.15s;
+}
+
+.tab-boton.activo{
+  background:white;
   color:#07142f;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
-.contacto-card-ciudad{
-  font-size:0.82rem;
-  color:#6b7a94;
-  white-space:nowrap;
+.tab-badge{
+  display:inline-block;
+  min-width:22px;
+  padding:1px 6px;
+  border-radius:20px;
+  background:#d3dceb;
+  color:#42536e;
+  font-size:0.78rem;
 }
 
-.contacto-card-body{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  font-size:0.9rem;
-  color:#2c3a52;
+.tab-boton.activo .tab-badge{
+  background:#07142f;
+  color:white;
+}
+
+/* --- buscador --- */
+
+.buscador{
   margin-bottom:14px;
 }
 
-.contacto-card-label{
+/* --- lista compacta desplegable (móvil) --- */
+
+.lista-contactos{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.contacto-item{
+  border-bottom:1px solid #eef2f7;
+}
+
+.contacto-item.abierto{
+  background:#f8fbff;
+  border-radius:12px;
+}
+
+.contacto-fila{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 8px;
+  background:transparent;
+  border:none;
+  text-align:left;
+}
+
+.contacto-avatar{
+  flex-shrink:0;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-weight:700;
+  font-size:0.95rem;
+}
+
+.contacto-resumen{
+  flex:1;
+  min-width:0;
+}
+
+.contacto-nombre{
   display:block;
-  font-size:0.72rem;
+  font-weight:600;
+  color:#07142f;
+  font-size:0.97rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.contacto-sub{
+  display:block;
+  font-size:0.83rem;
+  color:#8592a6;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.contacto-chevron{
+  flex-shrink:0;
+  color:#8592a6;
+  font-size:1.3rem;
+  line-height:1;
+  transition:transform 0.2s;
+}
+
+.contacto-chevron.rotado{
+  transform:rotate(180deg);
+}
+
+.contacto-detalle{
+  padding:4px 8px 14px 62px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.detalle-campo{
+  font-size:0.9rem;
+  color:#2c3a52;
+  word-break:break-word;
+}
+
+.detalle-label{
+  display:block;
+  font-size:0.7rem;
   font-weight:700;
   text-transform:uppercase;
   color:#8592a6;
 }
 
-.contacto-card-actions{
+.detalle-acciones{
   display:flex;
   gap:8px;
+  margin-top:6px;
 }
 
-.contacto-card-actions .btn{
+.detalle-acciones .btn{
   flex:1;
   border-radius:10px;
-  padding:10px;
+  padding:9px;
   font-weight:600;
+  font-size:0.88rem;
 }
 
-.contactos-cards-vacio{
+.lista-vacia{
   text-align:center;
   color:#8592a6;
-  padding:20px 0;
+  padding:24px 0;
+  margin:0;
 }
 
 html{
@@ -264,7 +368,7 @@ html{
 
 }
 
-@media(max-width:992px){
+@media(max-width:991.98px){
 
   .main-container{
     padding:10px;
@@ -272,6 +376,15 @@ html{
 
   .card-custom{
     margin-bottom:20px;
+  }
+
+  /* debajo de 992px mandan las pestañas: se ve una sola columna a la vez */
+  .tabs-movil{
+    display:flex;
+  }
+
+  .tab-oculto{
+    display:none;
   }
 
 }
