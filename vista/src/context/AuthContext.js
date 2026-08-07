@@ -14,19 +14,29 @@ export const AuthProvider = ({ children }) => {
         setCargando(true);
         setError(null);
 
-        const { ok, data } = await loginRequest(usuarioInput, password);
+        try {
+            const { ok, data } = await loginRequest(usuarioInput, password);
 
-        setCargando(false);
+            if (ok) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('usuario', data.usuario);
+                setUsuario(data.usuario);
+                return true;
+            }
 
-        if (ok) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('usuario', data.usuario);
-            setUsuario(data.usuario);
-            return true;
+            setError(data?.msg || 'No se pudo iniciar sesión');
+            return false;
+
+        } catch (error) {
+            // red de seguridad: aunque api.js ya no debería lanzar, si algo
+            // inesperado falla, el botón nunca se queda pegado en "Ingresando..."
+            console.error('Error inesperado en login:', error);
+            setError('Ocurrió un error inesperado. Intenta de nuevo.');
+            return false;
+
+        } finally {
+            setCargando(false);
         }
-
-        setError(data?.msg || 'No se pudo iniciar sesión');
-        return false;
 
     }, []);
 

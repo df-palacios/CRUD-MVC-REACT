@@ -16,7 +16,19 @@ const request = async (path, options = {}) => {
         ...options.headers
     };
 
-    const response = await fetch(`${API_URL}${path}`, { ...options, headers });
+    let response;
+
+    try {
+        response = await fetch(`${API_URL}${path}`, { ...options, headers });
+    } catch (error) {
+        // el backend no respondió: URL mala, sin conexión, firewall, servidor caído, etc.
+        console.error(`Error de red llamando a ${path}:`, error);
+        return {
+            ok: false,
+            status: 0,
+            data: { ok: false, msg: 'No se pudo conectar con el servidor. Revisa tu conexión o REACT_APP_API_URL.' }
+        };
+    }
 
     if (response.status === 401) {
         localStorage.removeItem('token');
