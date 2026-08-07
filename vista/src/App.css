@@ -33,6 +33,12 @@ body{
   padding:24px;
 }
 
+/* sin esto, el contenido ancho de la tabla estira la columna y se
+   desborda por debajo del formulario (min-width:auto es el default en flex) */
+.row > [class*="col-"]{
+  min-width:0;
+}
+
 /* ---------- barra superior ---------- */
 
 .topbar{
@@ -192,8 +198,98 @@ body{
   color:var(--ink-2);
 }
 
+/* ---------- menú de acciones por fila (kebab) ---------- */
+
+/* Nota: este contenedor NO lleva overflow, porque crearía un contexto de
+   recorte que cortaría el menú desplegable de cada fila. El desbordamiento
+   se evita con min-width:0 en la columna + el kebab, que libera ~110px. */
+
 .col-acciones{
   text-align:right;
+  width:52px;
+}
+
+.menu-contenedor{
+  position:relative;
+  display:inline-block;
+}
+
+.btn-kebab{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  border:none;
+  background:transparent;
+  border-radius:6px;
+  color:var(--ink-3);
+  transition:0.12s;
+}
+
+.btn-kebab:hover,
+.btn-kebab[aria-expanded="true"]{
+  background:var(--line-suave);
+  color:var(--ink);
+}
+
+.btn-kebab:focus-visible{
+  outline:2px solid var(--ink);
+  outline-offset:1px;
+}
+
+.menu{
+  position:absolute;
+  top:calc(100% + 4px);
+  right:0;
+  z-index:20;
+  min-width:132px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radio-sm);
+  box-shadow:0 8px 24px rgba(16,24,40,0.12);
+  padding:4px;
+  display:flex;
+  flex-direction:column;
+}
+
+.menu-item{
+  border:none;
+  background:transparent;
+  text-align:left;
+  padding:7px 10px;
+  border-radius:6px;
+  font-size:0.85rem;
+  font-weight:500;
+  color:var(--ink-2);
+  transition:0.1s;
+}
+
+.menu-item:hover{
+  background:var(--line-suave);
+  color:var(--ink);
+}
+
+.menu-item-peligro{
+  color:var(--peligro);
+}
+
+.menu-item-peligro:hover{
+  background:#fef3f2;
+  color:var(--peligro);
+}
+
+/* accesible pero no visible: la cabecera de la columna de acciones */
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
 }
 
 .chip-ciudad{

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { eliminarUsuario } from '../services/api';
 import { colorDe, iniciales } from '../utils/avatar';
 
@@ -7,7 +7,39 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
     // id de la fila desplegada en móvil (null = todas colapsadas)
     const [expandidoId, setExpandidoId] = useState(null);
 
+    // id de la fila con el menú de acciones abierto (escritorio)
+    const [menuAbiertoId, setMenuAbiertoId] = useState(null);
+
+    const contenedorRef = useRef(null);
+
+    // cerrar el menú al hacer clic fuera o al pulsar Escape
+    useEffect(() => {
+
+        if (menuAbiertoId === null) return;
+
+        const alClicFuera = (e) => {
+            if (!contenedorRef.current?.contains(e.target)) {
+                setMenuAbiertoId(null);
+            }
+        };
+
+        const alTeclear = (e) => {
+            if (e.key === 'Escape') setMenuAbiertoId(null);
+        };
+
+        document.addEventListener('mousedown', alClicFuera);
+        document.addEventListener('keydown', alTeclear);
+
+        return () => {
+            document.removeEventListener('mousedown', alClicFuera);
+            document.removeEventListener('keydown', alTeclear);
+        };
+
+    }, [menuAbiertoId]);
+
     const handleDelete = async id => {
+
+        setMenuAbiertoId(null);
 
         const { ok, data } = await eliminarUsuario(id);
 
@@ -19,93 +51,130 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
     };
 
+    const handleEditar = (entrada) => {
+        setMenuAbiertoId(null);
+        onEditar(entrada);
+    };
+
     if (entradas.length === 0) {
         return <p className='lista-vacia'>No hay contactos que coincidan.</p>;
     }
 
     return (
 
-        <>
+        <div ref={contenedorRef}>
+
             {/* Tabla: solo en pantallas medianas/grandes (>= 768px) */}
-            <table className='table d-none d-md-table' data-testid="tabla-contactos">
+            <div className='tabla-wrap d-none d-md-block'>
 
-                <thead>
+                <table className='table' data-testid="tabla-contactos">
 
-                    <tr>
-                        <th>Contacto</th>
-                        <th className='col-num'>Teléfono</th>
-                        <th className='col-num'>Celular</th>
-                        <th>Dirección</th>
-                        <th>Ciudad</th>
-                        <th className='col-acciones'>Acciones</th>
-                    </tr>
+                    <thead>
 
-                </thead>
-
-                <tbody>
-
-                    {entradas.map((entrada) => (
-
-                        <tr key={entrada.id} data-testid={`fila-contacto-${entrada.id}`}>
-
-                            {/* celda de identidad: avatar + nombre + correo */}
-                            <td>
-                                <div className='identidad'>
-
-                                    <span
-                                        className='avatar'
-                                        style={{ background: colorDe(entrada.nombres + entrada.apellidos) }}
-                                        aria-hidden='true'
-                                    >
-                                        {iniciales(entrada.nombres, entrada.apellidos)}
-                                    </span>
-
-                                    <span className='identidad-texto'>
-                                        <span className='identidad-nombre'>
-                                            {entrada.nombres} {entrada.apellidos}
-                                        </span>
-                                        <span className='identidad-correo'>{entrada.correo}</span>
-                                    </span>
-
-                                </div>
-                            </td>
-
-                            <td className='col-num'>{entrada.telefonos}</td>
-                            <td className='col-num'>{entrada.celular}</td>
-                            <td className='celda-suave'>{entrada.direccion}</td>
-                            <td><span className='chip-ciudad'>{entrada.ciudad}</span></td>
-
-                            <td>
-
-                                <div className='actions'>
-
-                                    <button
-                                        onClick={() => onEditar(entrada)}
-                                        className='btn btn-ghost'
-                                        data-testid={`btn-editar-${entrada.id}`}
-                                    >
-                                        Editar
-                                    </button>
-
-                                    <button
-                                        onClick={() => handleDelete(entrada.id)}
-                                        className='btn btn-ghost btn-ghost-peligro'
-                                        data-testid={`btn-borrar-${entrada.id}`}
-                                    >
-                                        Borrar
-                                    </button>
-
-                                </div>
-
-                            </td>
-
+                        <tr>
+                            <th>Contacto</th>
+                            <th className='col-num'>Teléfono</th>
+                            <th className='col-num'>Celular</th>
+                            <th>Dirección</th>
+                            <th>Ciudad</th>
+                            <th className='col-acciones'><span className='sr-only'>Acciones</span></th>
                         </tr>
 
-                    ))}
+                    </thead>
 
-                </tbody>
+                    <tbody>
 
-            </table>
+                        {entradas.map((entrada) => (
+
+                            <tr key={entrada.id} data-testid={`fila-contacto-${entrada.id}`}>
+
+                                {/* celda de identidad: avatar + nombre + correo */}
+                                <td>
+                                    <div className='identidad'>
+
+                                        <span
+                                            className='avatar'
+                                            style={{ background: colorDe(entrada.nombres + entrada.apellidos) }}
+                                            aria-hidden='true'
+                                        >
+                                            {iniciales(entrada.nombres, entrada.apellidos)}
+                                        </span>
+
+                                        <span className='identidad-texto'>
+                                            <span className='identidad-nombre'>
+                                                {entrada.nombres} {entrada.apellidos}
+                                            </span>
+                                            <span className='identidad-correo'>{entrada.correo}</span>
+                                        </span>
+
+                                    </div>
+                                </td>
+
+                                <td className='col-num'>{entrada.telefonos}</td>
+                                <td className='col-num'>{entrada.celular}</td>
+                                <td className='celda-suave'>{entrada.direccion}</td>
+                                <td><span className='chip-ciudad'>{entrada.ciudad}</span></td>
+
+                                <td className='col-acciones'>
+
+                                    <div className='menu-contenedor'>
+
+                                        <button
+                                            className='btn-kebab'
+                                            onClick={() => setMenuAbiertoId(
+                                                menuAbiertoId === entrada.id ? null : entrada.id
+                                            )}
+                                            aria-label='Acciones'
+                                            aria-haspopup='menu'
+                                            aria-expanded={menuAbiertoId === entrada.id}
+                                            data-testid={`btn-acciones-${entrada.id}`}
+                                        >
+                                            <svg width='16' height='16' viewBox='0 0 16 16' aria-hidden='true'>
+                                                <circle cx='8' cy='3' r='1.5' fill='currentColor' />
+                                                <circle cx='8' cy='8' r='1.5' fill='currentColor' />
+                                                <circle cx='8' cy='13' r='1.5' fill='currentColor' />
+                                            </svg>
+                                        </button>
+
+                                        {menuAbiertoId === entrada.id && (
+
+                                            <div className='menu' role='menu'>
+
+                                                <button
+                                                    className='menu-item'
+                                                    role='menuitem'
+                                                    onClick={() => handleEditar(entrada)}
+                                                    data-testid={`btn-editar-${entrada.id}`}
+                                                >
+                                                    Editar
+                                                </button>
+
+                                                <button
+                                                    className='menu-item menu-item-peligro'
+                                                    role='menuitem'
+                                                    onClick={() => handleDelete(entrada.id)}
+                                                    data-testid={`btn-borrar-${entrada.id}`}
+                                                >
+                                                    Borrar
+                                                </button>
+
+                                            </div>
+
+                                        )}
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        ))}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
             {/* Lista compacta desplegable: solo en pantallas chicas (< 768px) */}
             <ul className='lista-contactos d-md-none' data-testid="lista-contactos-movil">
@@ -206,7 +275,8 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
                 })}
 
             </ul>
-        </>
+
+        </div>
 
     );
 
