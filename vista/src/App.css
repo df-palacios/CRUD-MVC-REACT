@@ -63,6 +63,12 @@ body{
   color:#fff;
 }
 
+.topbar-derecha{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
 .topbar-user{
   display:flex;
   align-items:center;
