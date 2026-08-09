@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Karate Timeline</title>
+    <style>
+      body, html { font-family: arial, sans-serif; font-size: 11pt; }
+      #visualization { box-sizing: border-box; width: 100%; height: 300px; }
+      .vis-item.failed { background-color: #F2928C; }
+      .page-heading { padding: 0.5em; margin-bottom: 0.5em; background-color: lightcyan; border: 1px solid gray; }
+    </style>
+    <script src="res/vis.min.js"></script>
+    <link href="res/vis.min.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="page-heading">
+      <a href="karate-summary.html">Summary</a>
+    </div>     
+    <div id="visualization"></div>
+    <script>
+var groups = [{"content":"main","id":1}];
+var items = [{"id":1,"group":1,"content":"examples\/auth\/auth[1:7]","start":1786308121376,"end":1786308122257,"title":"examples\/auth\/auth[1:7] 15:42:01.376-15:42:02.257 Login exitoso devuelve un token"},{"id":2,"group":1,"content":"examples\/auth\/auth[2:19]","start":1786308122265,"end":1786308122343,"title":"examples\/auth\/auth[2:19] 15:42:02.265-15:42:02.343 Login con password incorrecto"},{"id":3,"group":1,"content":"examples\/auth\/auth[3:29]","start":1786308122348,"end":1786308122358,"title":"examples\/auth\/auth[3:29] 15:42:02.348-15:42:02.358 Login con usuario que no existe"},{"id":4,"group":1,"content":"examples\/auth\/auth[4:39]","start":1786308122363,"end":1786308122373,"title":"examples\/auth\/auth[4:39] 15:42:02.363-15:42:02.373 Login sin usuario o password -> 400"},{"id":5,"group":1,"content":"examples\/auth\/auth[5:49]","start":1786308122380,"end":1786308122390,"title":"examples\/auth\/auth[5:49] 15:42:02.380-15:42:02.390 Consultar usuarios sin token -> 401"},{"id":6,"group":1,"content":"examples\/auth\/auth[6:58]","start":1786308122396,"end":1786308122408,"title":"examples\/auth\/auth[6:58] 15:42:02.396-15:42:02.408 Consultar usuarios con token inválido -> 401"},{"id":7,"group":1,"content":"examples\/auth\/auth[7:68]","start":1786308122415,"end":1786308122426,"title":"examples\/auth\/auth[7:68] 15:42:02.415-15:42:02.426 Crear usuario sin token -> 401"},{"id":8,"group":1,"content":"examples\/common\/login[1:9]","start":1786308123171,"end":1786308123252,"title":"examples\/common\/login[1:9] 15:42:03.171-15:42:03.252"},{"id":9,"group":1,"content":"examples\/users\/users[1:10]","start":1786308123312,"end":1786308123422,"title":"examples\/users\/users[1:10] 15:42:03.312-15:42:03.422 Consultar todos los usuarios"},{"id":10,"group":1,"content":"examples\/users\/users[2:20]","start":1786308123426,"end":1786308123444,"title":"examples\/users\/users[2:20] 15:42:03.426-15:42:03.444 Consultar usuario inexistente"},{"id":11,"group":1,"content":"examples\/users\/users[3:30]","start":1786308123447,"end":1786308123479,"title":"examples\/users\/users[3:30] 15:42:03.447-15:42:03.479 Crear usuario correctamente"},{"id":12,"group":1,"content":"examples\/users\/users[4:58]","start":1786308123482,"end":1786308123498,"title":"examples\/users\/users[4:58] 15:42:03.482-15:42:03.498 Validar creación con datos incompletos"},{"id":13,"group":1,"content":"examples\/users\/users[5:77]","start":1786308123502,"end":1786308123546,"title":"examples\/users\/users[5:77] 15:42:03.502-15:42:03.546 Actualizar usuario"},{"id":14,"group":1,"content":"examples\/users\/users[6:121]","start":1786308123550,"end":1786308123567,"title":"examples\/users\/users[6:121] 15:42:03.550-15:42:03.567 Actualizar usuario inexistente"},{"id":15,"group":1,"content":"examples\/users\/users[7:139]","start":1786308123570,"end":1786308123601,"title":"examples\/users\/users[7:139] 15:42:03.570-15:42:03.601 Eliminar usuario"},{"id":16,"group":1,"content":"examples\/users\/users[8:171]","start":1786308123604,"end":1786308123617,"title":"examples\/users\/users[8:171] 15:42:03.604-15:42:03.617 Eliminar usuario inexistente"}];
+</script>
+    <script>
+      var container = document.getElementById('visualization');
+      var timeline = new vis.Timeline(container);
+      timeline.setOptions({groupOrder: 'content'});
+      timeline.setGroups(new vis.DataSet(groups));
+      timeline.setItems(new vis.DataSet(items));
+    </script>
+  </body>
+</html>
