@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing — Libreta de contactos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --ink:#101828;
+  --ink-2:#475467;
+  --ink-3:#98a2b3;
+  --line:#e4e7ec;
+  --line-suave:#f1f3f6;
+  --surface:#ffffff;
+  --canvas:#f7f8fa;
+  --exito:#0e9f6e;
+  --exito-bg:#e1f5ee;
+  --exito-linea:#9fe1cb;
+  --radio:12px;
+  --display:'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+  --body:'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+*{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+
+body{
+  margin:0;
+  background:var(--canvas);
+  font-family:var(--body);
+  color:var(--ink);
+}
+
+a{ color:inherit; }
+
+.topbar{
+  background:var(--ink);
+  padding:0 24px;
+}
+
+.topbar-inner{
+  max-width:960px;
+  margin:0 auto;
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.wordmark{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:1.05rem;
+  letter-spacing:-0.01em;
+  color:#fff;
+}
+
+.topbar-link{
+  font-size:0.85rem;
+  color:rgba(255,255,255,0.72);
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,0.22);
+  border-radius:8px;
+  padding:6px 12px;
+  transition:0.12s;
+}
+
+.topbar-link:hover{
+  background:rgba(255,255,255,0.1);
+  border-color:rgba(255,255,255,0.4);
+  color:#fff;
+}
+
+.main{
+  max-width:960px;
+  margin:0 auto;
+  padding:48px 24px 64px;
+}
+
+.eyebrow{
+  display:block;
+  font-size:0.7rem;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:8px;
+}
+
+.hero h1{
+  font-family:var(--display);
+  font-size:2rem;
+  font-weight:600;
+  letter-spacing:-0.02em;
+  margin:0 0 12px;
+}
+
+.hero p{
+  color:var(--ink-2);
+  font-size:1rem;
+  line-height:1.6;
+  max-width:620px;
+  margin:0 0 32px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:40px;
+}
+
+.stat{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radio);
+  padding:20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.stat-check{
+  flex-shrink:0;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:var(--exito-bg);
+  color:var(--exito);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.stat-numero{
+  font-family:var(--display);
+  font-size:1.5rem;
+  font-weight:600;
+  letter-spacing:-0.02em;
+  color:var(--ink);
+  line-height:1.2;
+}
+
+.stat-label{
+  font-size:0.82rem;
+  color:var(--ink-2);
+}
+
+.section-title{
+  font-family:var(--display);
+  font-size:1.1rem;
+  font-weight:600;
+  margin:0 0 4px;
+}
+
+.section-sub{
+  color:var(--ink-3);
+  font-size:0.85rem;
+  margin:0 0 20px;
+}
+
+.reportes{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:48px;
+}
+
+.reporte-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radio);
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+}
+
+.reporte-tag{
+  display:inline-block;
+  align-self:flex-start;
+  font-size:0.7rem;
+  font-weight:600;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  background:var(--line-suave);
+  border-radius:20px;
+  padding:3px 10px;
+  margin-bottom:14px;
+}
+
+.reporte-card h3{
+  font-family:var(--display);
+  font-size:1.15rem;
+  font-weight:600;
+  margin:0 0 8px;
+}
+
+.reporte-card p{
+  color:var(--ink-2);
+  font-size:0.9rem;
+  line-height:1.55;
+  margin:0 0 18px;
+  flex:1;
+}
+
+.reporte-card ul{
+  margin:0 0 18px;
+  padding-left:18px;
+  color:var(--ink-2);
+  font-size:0.85rem;
+  line-height:1.7;
+}
+
+.btn-reporte{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  background:var(--ink);
+  color:#fff;
+  text-decoration:none;
+  font-weight:500;
+  font-size:0.875rem;
+  border-radius:8px;
+  padding:10px 16px;
+  transition:0.12s;
+}
+
+.btn-reporte:hover{
+  background:#1d2939;
+}
+
+.como-funciona{
+  border-top:1px solid var(--line);
+  padding-top:32px;
+}
+
+.pasos{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:16px;
+  margin-top:20px;
+}
+
+.paso{
+  font-size:0.85rem;
+  color:var(--ink-2);
+  line-height:1.6;
+}
+
+.paso-num{
+  font-family:var(--display);
+  font-weight:600;
+  color:var(--ink);
+  font-size:0.95rem;
+  display:block;
+  margin-bottom:4px;
+}
+
+.nota{
+  margin-top:32px;
+  font-size:0.8rem;
+  color:var(--ink-3);
+  border-top:1px solid var(--line);
+  padding-top:20px;
+}
+
+@media(max-width:700px){
+  .stats, .reportes, .pasos{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <span class="wordmark">Libreta de contactos</span>
+    <a class="topbar-link" href="https://github.com/df-palacios/CRUD-MVC-REACT" target="_blank" rel="noopener">Ver código en GitHub</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <div class="hero">
+    <span class="eyebrow">Automation testing</span>
+    <h1>Este proyecto se prueba solo</h1>
+    <p>
+      Cada funcionalidad — login, autenticación con JWT, y el CRUD completo de contactos —
+      está cubierta por dos capas de pruebas automatizadas: una que ataca la API directamente,
+      y otra que maneja un navegador real como lo haría una persona.
+    </p>
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      <span class="stat-check">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <div>
+        <div class="stat-numero">16 / 16</div>
+        <div class="stat-label">escenarios de API pasando (Karate)</div>
+      </div>
+    </div>
+
+    <div class="stat">
+      <span class="stat-check">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <div>
+        <div class="stat-numero">8 / 8</div>
+        <div class="stat-label">tests end-to-end pasando (Playwright)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">Reportes</h2>
+  <p class="section-sub">Reportes reales de la última corrida, con detalle de cada escenario.</p>
+
+  <div class="reportes">
+
+    <div class="reporte-card">
+      <span class="reporte-tag">API · Karate DSL</span>
+      <h3>Pruebas de backend</h3>
+      <p>Golpea los endpoints REST directamente: login con JWT, y el CRUD completo de contactos.</p>
+      <ul>
+        <li>Login correcto e incorrecto</li>
+        <li>Acceso sin token o con token inválido</li>
+        <li>Crear, consultar, actualizar y eliminar</li>
+      </ul>
+      <a class="btn-reporte" href="karate-report/karate-summary.html" target="_blank" rel="noopener">Ver reporte completo →</a>
+    </div>
+
+    <div class="reporte-card">
+      <span class="reporte-tag">E2E · Playwright</span>
+      <h3>Pruebas de interfaz</h3>
+      <p>Maneja un navegador real: escribe, hace clic, y verifica lo que se ve en pantalla, igual que una persona.</p>
+      <ul>
+        <li>Login por la UI y cierre de sesión</li>
+        <li>Bloqueo de rutas sin sesión activa</li>
+        <li>Crear, editar y borrar un contacto</li>
+      </ul>
+      <a class="btn-reporte" href="playwright-report/index.html" target="_blank" rel="noopener">Ver reporte completo →</a>
+    </div>
+
+  </div>
+
+  <div class="como-funciona">
+    <h2 class="section-title">Cómo funciona</h2>
+    <p class="section-sub">Dos capas independientes, cada una responde una pregunta distinta.</p>
+
+    <div class="pasos">
+      <div class="paso">
+        <span class="paso-num">API</span>
+        Karate confirma que el backend hace exactamente lo que dice el contrato — sin depender de cómo se vea la interfaz.
+      </div>
+      <div class="paso">
+        <span class="paso-num">UI</span>
+        Playwright confirma que una persona real, usando el navegador, puede completar cada flujo sin errores.
+      </div>
+      <div class="paso">
+        <span class="paso-num">Juntas</span>
+        Si algo se rompe en el backend o en la interfaz, una de las dos capas lo detecta antes de que llegue a producción.
+      </div>
+    </div>
+  </div>
+
+  <p class="nota">
+    Reportes generados localmente y publicados en esta página como una foto del último resultado.
+    Actualización automática en cada cambio (CI/CD) está en el roadmap.
+  </p>
+
+</main>
+
+</body>
+</html>
