@@ -22,7 +22,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .env
-
-# copia local de docs/ para servir los reportes desde localhost:3000/docs
-# (la genera actualizar-reportes.bat; no se versiona, es un espejo de docs/)
-/public/docs

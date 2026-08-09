@@ -3,8 +3,9 @@
 CRUD de contactos con autenticación JWT, manejable 100% por API, con dos capas
 de testing automatizado (API y end-to-end) y una interfaz responsive.
 
-**[Ver el dashboard de testing →](https://df-palacios.github.io/CRUD-MVC-REACT/)**
-*(actívalo una vez en Settings → Pages → branch `main` /docs, ver abajo)*
+**Dashboard de testing:** corre la app (`npm start` en `vista`) y toca
+"Reportes de testing" en el navbar — se sirve desde tu propio servidor,
+sin depender de terceros (ni siquiera en producción).
 
 ## Stack
 
@@ -18,12 +19,12 @@ de testing automatizado (API y end-to-end) y una interfaz responsive.
 ## Estructura
 
 ```
-controlador/       backend (Node/Express/TS)
-vista/              frontend (React)
-modelo/             modelo de base de datos (.sql)
-test-api-master/    tests de API (Karate DSL)
-playwright-e2e/     tests end-to-end (Playwright)
-docs/               dashboard de testing (GitHub Pages)
+controlador/              backend (Node/Express/TS)
+vista/                     frontend (React)
+vista/public/docs/         dashboard de testing (se sirve en /docs)
+modelo/                    modelo de base de datos (.sql)
+test-api-master/           tests de API (Karate DSL)
+playwright-e2e/            tests end-to-end (Playwright)
 ```
 
 ## Arranque rápido
@@ -47,6 +48,8 @@ docs/               dashboard de testing (GitHub Pages)
    copy .env.example .env
    npm start
    ```
+   La URL del backend se detecta sola (misma IP/host con la que abras
+   la app) — no hace falta configurarla a mano, ni en el celular.
 
 4. **Tests de API (Karate)** — con el backend corriendo:
    ```bat
@@ -67,20 +70,20 @@ Guía completa, con solución de problemas comunes, en `GUIA-DE-PRUEBAS.md`.
 
 ## Dashboard de testing
 
-`docs/index.html` es una página estática con los reportes reales de la última
-corrida de Karate y Playwright — pensada para que cualquiera (sin instalar
-nada) pueda ver qué se prueba y el resultado.
+`vista/public/docs/index.html` es una página estática con los reportes reales
+de la última corrida de Karate y Playwright. Vive dentro del propio frontend
+—no en un proveedor externo— así que queda servida automáticamente en
+`/docs` tanto en desarrollo (`npm start`) como en producción
+(`npm run build` la empaca dentro de `build/`, lista para el VPS el día
+que se despliegue).
 
-Después de correr los tests localmente, publícalos con:
+Después de correr los tests, publica el resultado con:
 ```bat
 actualizar-reportes.bat
-git add docs
+git add vista\public\docs
 git commit -m "Actualiza reportes de testing"
 git push
 ```
-
-**Para activar el link en vivo** (una sola vez): en GitHub, ve a
-`Settings → Pages → Source: Deploy from a branch → main → /docs → Save`.
 
 ## Ramas
 

@@ -1,20 +1,11 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
-// ¿Estamos viendo la app desde localhost o desde una IP de red privada
-// (LAN)? Si sí, los reportes ya están servidos ahí mismo en /docs (los deja
-// actualizar-reportes.bat). Si no —o sea, cualquiera fuera de tu red, como
-// un reclutador— van al dashboard público en GitHub Pages.
-const esRedLocal = (host) =>
-    host === 'localhost' ||
-    host === '127.0.0.1' ||
-    /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host);
-
-const URL_TESTING = process.env.REACT_APP_TESTING_URL || (
-    esRedLocal(window.location.hostname)
-        ? `${window.location.origin}/docs/`
-        : 'https://df-palacios.github.io/CRUD-MVC-REACT/'
-);
+// El dashboard de testing vive en /docs de este mismo servidor —
+// local ahora, el VPS el día que se despliegue — nunca en un tercero.
+// vista/public/docs se sirve automaticamente (dev con CRA, y queda
+// empacado dentro de build/ al correr "npm run build" para producción).
+const URL_TESTING = process.env.REACT_APP_TESTING_URL || `${window.location.origin}/docs/`;
 
 const Navbar = ({ brand }) => {
 
