@@ -23,6 +23,12 @@ if exist playwright-e2e\playwright-report (
 
 echo.
 echo === Listo ===
+
+echo.
+echo === Copiando docs/ hacia vista\public\docs (para verlo en localhost:3000/docs) ===
+xcopy /E /I /Y docs vista\public\docs >nul
+echo OK - ahora "Reportes de testing" funciona tambien en local
+
 echo Revisa docs\index.html abriendolo en el navegador, y si se ve bien:
 echo.
 echo   git add docs
