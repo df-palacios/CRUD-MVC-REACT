@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { cue, CUES } from '../lib/sound';
+
+const DEMO_USER = process.env.REACT_APP_DEMO_USER;
+const DEMO_PASSWORD = process.env.REACT_APP_DEMO_PASSWORD;
 
 const Login = () => {
 
@@ -21,6 +25,12 @@ const Login = () => {
         if (exito) {
             navigate(destino, { replace: true });
         }
+    };
+
+    const autocompletar = () => {
+        cue(CUES.menu);
+        setUsuario(DEMO_USER);
+        setPassword(DEMO_PASSWORD);
     };
 
     return (
@@ -73,6 +83,21 @@ const Login = () => {
                 >
                     {cargando ? 'Ingresando...' : 'Ingresar'}
                 </button>
+
+                {DEMO_USER && DEMO_PASSWORD && (
+                    <button
+                        type="button"
+                        className="login-demo"
+                        onClick={autocompletar}
+                        data-testid="login-demo"
+                    >
+                        <span className="login-demo-label">Credenciales de demo</span>
+                        <span className="login-demo-valores">
+                            <code>{DEMO_USER}</code> · <code>{DEMO_PASSWORD}</code>
+                        </span>
+                        <span className="login-demo-hint">Toca para autocompletar</span>
+                    </button>
+                )}
 
             </form>
         </div>

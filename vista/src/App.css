@@ -544,6 +544,53 @@ body{
   margin:0 0 12px;
 }
 
+.login-demo{
+  width:100%;
+  margin-top:14px;
+  padding:10px 12px;
+  background:var(--line-suave);
+  border:1px dashed var(--line);
+  border-radius:var(--radio-sm);
+  text-align:center;
+  transition:0.12s;
+}
+
+.login-demo:hover{
+  background:#eef1f5;
+  border-color:#d5dae2;
+}
+
+.login-demo-label{
+  display:block;
+  font-size:0.7rem;
+  font-weight:600;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:4px;
+}
+
+.login-demo-valores{
+  display:block;
+  font-size:0.9rem;
+  color:var(--ink);
+  margin-bottom:2px;
+}
+
+.login-demo-valores code{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:5px;
+  padding:1px 6px;
+  font-size:0.85rem;
+}
+
+.login-demo-hint{
+  display:block;
+  font-size:0.72rem;
+  color:var(--ink-3);
+}
+
 /* ---------- pestañas (solo móvil) ---------- */
 
 .tabs-movil{

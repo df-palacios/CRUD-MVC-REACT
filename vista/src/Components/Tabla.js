@@ -3,7 +3,7 @@ import { eliminarUsuario } from '../services/api';
 import { colorDe, iniciales } from '../utils/avatar';
 import { cue, CUES } from '../lib/sound';
 
-const Tabla = ({ entradas, setListUpdated, onEditar }) => {
+const Tabla = ({ entradas, setListUpdated, onEditar, hayBusqueda }) => {
 
     // id de la fila desplegada en móvil (null = todas colapsadas)
     const [expandidoId, setExpandidoId] = useState(null);
@@ -60,7 +60,13 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
     };
 
     if (entradas.length === 0) {
-        return <p className='lista-vacia'>No hay contactos que coincidan.</p>;
+        return (
+            <p className='lista-vacia'>
+                {hayBusqueda
+                    ? 'No hay contactos que coincidan con tu búsqueda.'
+                    : 'Todavía no hay contactos. Agrega el primero con el formulario.'}
+            </p>
+        );
     }
 
     return (

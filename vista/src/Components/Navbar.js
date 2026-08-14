@@ -18,7 +18,7 @@ const Navbar = ({ brand, onReiniciado }) => {
     const handleReiniciar = async () => {
 
         const confirmado = window.confirm(
-            'Esto borra todos los contactos actuales y los reemplaza por los 3 de la demo original. ¿Continuar?'
+            'Esto borra TODOS los contactos actuales y deja la libreta vacía. ¿Continuar?'
         );
         if (!confirmado) return;
 
@@ -75,7 +75,7 @@ const Navbar = ({ brand, onReiniciado }) => {
                                 disabled={reiniciando}
                                 className="btn btn-ghost btn-ghost-claro"
                                 data-testid="btn-reiniciar"
-                                title="Borra los contactos de prueba y vuelve a los 3 originales de la demo"
+                                title="Borra todos los contactos y deja la libreta vacía"
                             >
                                 {reiniciando ? 'Reiniciando...' : '[TESTING] Reiniciar aplicación'}
                             </button>

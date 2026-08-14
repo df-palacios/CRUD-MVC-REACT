@@ -168,6 +168,7 @@ const Contactos = () => {
                 entradas={entradasFiltradas}
                 setListUpdated={setListUpdated}
                 onEditar={handleEditar}
+                hayBusqueda={busqueda.trim() !== ''}
               />
 
             </div>
