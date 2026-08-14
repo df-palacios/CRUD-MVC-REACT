@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { eliminarUsuario } from '../services/api';
 import { colorDe, iniciales } from '../utils/avatar';
+import { cue, CUES } from '../lib/sound';
 
 const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
@@ -45,6 +46,8 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
         if (!ok) {
             console.log(data?.msg);
+        } else {
+            cue(CUES.borrar);
         }
 
         setListUpdated(true);
@@ -121,9 +124,11 @@ const Tabla = ({ entradas, setListUpdated, onEditar }) => {
 
                                         <button
                                             className='btn-kebab'
-                                            onClick={() => setMenuAbiertoId(
-                                                menuAbiertoId === entrada.id ? null : entrada.id
-                                            )}
+                                            onClick={() => {
+                                                const abriendo = menuAbiertoId !== entrada.id;
+                                                setMenuAbiertoId(abriendo ? entrada.id : null);
+                                                if (abriendo) cue(CUES.menu);
+                                            }}
                                             aria-label='Acciones'
                                             aria-haspopup='menu'
                                             aria-expanded={menuAbiertoId === entrada.id}

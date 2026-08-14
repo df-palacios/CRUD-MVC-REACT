@@ -68,6 +68,8 @@ const Login = () => {
                     className="btn btn-primary"
                     disabled={cargando}
                     data-testid="login-submit"
+                    data-cuelume-press
+                    data-cuelume-release
                 >
                     {cargando ? 'Ingresando...' : 'Ingresar'}
                 </button>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { crearUsuario, actualizarUsuario } from '../services/api';
+import { cue, CUES } from '../lib/sound';
 
 //esta funcion modifica el estado de una entrada de la libreta cuando se detecta un cambio en el formulario (evento)
 const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar, onGuardado }) => {
@@ -37,6 +38,8 @@ const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar, 
             setError(data?.msg || 'No se pudo guardar el contacto');
             return;
         }
+
+        cue(CUES.guardar);
 
         // limpia el formulario, sale del modo edición y vuelve a la lista
         onGuardado();
@@ -92,7 +95,7 @@ const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar, 
 
             <div className="form-buttons">
 
-                <button type="submit" className="btn btn-primary" data-testid="btn-enviar">
+                <button type="submit" className="btn btn-primary" data-testid="btn-enviar" data-cuelume-press data-cuelume-release>
                     {modoEdicionId ? 'Guardar cambios' : 'Agregar contacto'}
                 </button>
 

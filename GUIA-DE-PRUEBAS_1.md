@@ -81,7 +81,7 @@ Arranca el server:
 npm run dev
 ```
 
-✅ Debe imprimir `servidor corriendo en el puerto 8000` **y no debe salir**
+✅ Debe imprimir `servidor corriendo en el puerto 8001` **y no debe salir**
 `ECONNREFUSED ... 3306` (si sale, revisa tus credenciales de MySQL en `.env`).
 
 Déjalo corriendo en esta terminal.
@@ -117,7 +117,7 @@ copy .env.example .env
 npm start
 ```
 
-Se abre `http://localhost:3000` en el navegador.
+Se abre `http://localhost:3001` en el navegador.
 
 ✅ **Debe redirigirte automáticamente a `/login`** (porque no hay sesión).
 
@@ -134,7 +134,7 @@ Se abre `http://localhost:3000` en el navegador.
 4. **Borrar un contacto** con el botón **Borrar** de su fila → debe
    desaparecer de la tabla.
 5. **Logout**: botón **Salir** arriba a la derecha → debe mandarte de vuelta
-   a `/login`. Si intentas ir a `http://localhost:3000/` directo después de
+   a `/login`. Si intentas ir a `http://localhost:3001/` directo después de
    salir, debe rebotarte a `/login` otra vez (ruta protegida).
 6. **Sesión vencida (opcional, para probar el manejo de 401)**: con sesión
    iniciada, abre las DevTools del navegador (F12) → pestaña **Application** →

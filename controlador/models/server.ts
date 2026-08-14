@@ -1,6 +1,7 @@
 import express from 'express';
 import userRoutes from '../routes/usuario'
 import authRoutes from '../routes/auth'
+import testingRoutes from '../routes/testing'
 import cors from 'cors'
 import db from '../db/connection';
 
@@ -10,12 +11,13 @@ class Server{
     private port:string;
     private apiPaths = {
         usuarios: '/api/usuarios',
-        auth: '/api/auth'
+        auth: '/api/auth',
+        testing: '/api/testing'
     }
 
     constructor(){
         this.app = express();
-        this.port = process.env.PORT || '8000';
+        this.port = process.env.PORT || '8001';
         this.dbConnection();
         this.middlewares();
         //definir las rutas
@@ -43,6 +45,7 @@ class Server{
     routes(){
         this.app.use(this.apiPaths.usuarios,userRoutes)
         this.app.use(this.apiPaths.auth,authRoutes)
+        this.app.use(this.apiPaths.testing,testingRoutes)
     }
 
     listen(){

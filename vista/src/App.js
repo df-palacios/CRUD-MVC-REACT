@@ -7,6 +7,7 @@ import ProtectedRoute from './Components/ProtectedRoute';
 import Login from './pages/Login';
 import { AuthProvider } from './context/AuthContext';
 import { getUsuarios } from './services/api';
+import { cue, CUES } from './lib/sound';
 import './App.css';
 
 const ENTRADA_VACIA = {
@@ -95,11 +96,21 @@ const Contactos = () => {
     setTab('lista');
   };
 
+  // tras reiniciar la app desde el Navbar: limpia cualquier edición en
+  // curso, vuelve a la lista y refresca (los datos ya cambiaron en el
+  // backend)
+  const handleReiniciado = () => {
+    handleCancelarEdicion();
+    setTab('lista');
+    setBusqueda('');
+    setListUpdated(true);
+  };
+
   return (
 
     <Fragment>
 
-      <Navbar brand='Libreta de contactos' />
+      <Navbar brand='Libreta de contactos' onReiniciado={handleReiniciado} />
 
       <div className="main-container">
 
@@ -108,7 +119,7 @@ const Contactos = () => {
 
           <button
             className={`tab-boton ${tab === 'lista' ? 'activo' : ''}`}
-            onClick={() => setTab('lista')}
+            onClick={() => { if (tab !== 'lista') { cue(CUES.tab); setTab('lista'); } }}
             role="tab"
             aria-selected={tab === 'lista'}
           >
@@ -117,7 +128,7 @@ const Contactos = () => {
 
           <button
             className={`tab-boton ${tab === 'form' ? 'activo' : ''}`}
-            onClick={() => setTab('form')}
+            onClick={() => { if (tab !== 'form') { cue(CUES.tab); setTab('form'); } }}
             role="tab"
             aria-selected={tab === 'form'}
           >

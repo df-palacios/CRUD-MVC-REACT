@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { login as loginRequest } from '../services/api';
+import { cue, CUES } from '../lib/sound';
 
 const AuthContext = createContext(null);
 
@@ -21,9 +22,11 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('usuario', data.usuario);
                 setUsuario(data.usuario);
+                cue(CUES.login);
                 return true;
             }
 
+            cue(CUES.loginError);
             setError(data?.msg || 'No se pudo iniciar sesión');
             return false;
 
@@ -31,6 +34,7 @@ export const AuthProvider = ({ children }) => {
             // red de seguridad: aunque api.js ya no debería lanzar, si algo
             // inesperado falla, el botón nunca se queda pegado en "Ingresando..."
             console.error('Error inesperado en login:', error);
+            cue(CUES.loginError);
             setError('Ocurrió un error inesperado. Intenta de nuevo.');
             return false;
 
@@ -44,6 +48,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
         setUsuario(null);
+        cue(CUES.logout);
     }, []);
 
     // si cualquier request del api.js recibe un 401, cerramos sesión automáticamente

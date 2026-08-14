@@ -1,12 +1,12 @@
 // Detecta el backend automáticamente a partir de cómo se cargó ESTA página:
-// - entraste por localhost:3000  -> pide a localhost:8000
-// - entraste por 192.168.x.x:3000 (celular u otro dispositivo en tu red)
-//    -> pide a esa misma IP:8000
+// - entraste por localhost:3001  -> pide a localhost:8001
+// - entraste por 192.168.x.x:3001 (celular u otro dispositivo en tu red)
+//    -> pide a esa misma IP:8001
 // Así no importa si tu router cambia de IP: el navegador siempre usa la
 // dirección con la que realmente te conectaste, no un valor fijo en .env.
 // REACT_APP_API_URL sigue funcionando como override explícito si alguna
 // vez lo necesitas (por ejemplo, backend detrás de un dominio distinto).
-const PUERTO_BACKEND = process.env.REACT_APP_API_PORT || 8000;
+const PUERTO_BACKEND = process.env.REACT_APP_API_PORT || 8001;
 const API_URL = process.env.REACT_APP_API_URL || `${window.location.protocol}//${window.location.hostname}:${PUERTO_BACKEND}`;
 
 /**
@@ -74,3 +74,6 @@ export const actualizarUsuario = (id, usuario) =>
 
 export const eliminarUsuario = (id) =>
     request(`/api/usuarios/${id}`, { method: 'DELETE' });
+
+export const reiniciarAplicacion = () =>
+    request('/api/testing/reset', { method: 'POST' });

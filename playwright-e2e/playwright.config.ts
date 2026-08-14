@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config({ quiet: true });
 
-const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+const baseURL = process.env.BASE_URL || 'http://localhost:3001';
 
 export default defineConfig({
   testDir: './tests',

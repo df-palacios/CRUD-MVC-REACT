@@ -6,7 +6,7 @@ function fn() {
   }
   var config = {
     env: env,
-    baseUrl: 'http://localhost:8000',
+    baseUrl: 'http://localhost:8001',
     // credenciales de test: se pueden sobreescribir con
     // -Dadmin.user=... -Dadmin.password=... (ver README-KARATE.md)
     adminUser: karate.properties['admin.user'] || 'admin',
