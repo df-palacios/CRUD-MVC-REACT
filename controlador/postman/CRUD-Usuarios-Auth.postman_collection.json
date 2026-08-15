@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "CRUD Usuarios - Auth JWT",
+    "description": "Login + CRUD protegido por Bearer token. El request de Login guarda el token automáticamente en la variable {{token}} para que el resto de requests lo usen solos.\n\nEl usuario y password ya vienen puestos con las credenciales de demo — solo dale Send al request de Login y el resto funciona solo.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8001" },
+    { "key": "token", "value": "" },
+    { "key": "usuario_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (correcto)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('token', data.token);",
+                  "console.log('Token guardado:', data.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"admin\",\n  \"password\": \"TestPassword\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Login (password incorrecto) -> 401",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"admin\",\n  \"password\": \"password-mala\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios (protegido)",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+      },
+      "item": [
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/usuarios", "host": ["{{base_url}}"], "path": ["api", "usuarios"] }
+          }
+        },
+        {
+          "name": "Obtener usuario por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["api", "usuarios", "{{usuario_id}}"] }
+          }
+        },
+        {
+          "name": "Crear usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.collectionVariables.set('usuario_id', data.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Danilo\",\n  \"apellidos\": \"Test\",\n  \"correo\": \"danilo@test.com\",\n  \"telefonos\": 6041234567,\n  \"celular\": 3001234567,\n  \"direccion\": \"Calle 1 # 2-3\",\n  \"ciudad\": \"Cali\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/usuarios", "host": ["{{base_url}}"], "path": ["api", "usuarios"] }
+          }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ciudad\": \"Bogota\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["api", "usuarios", "{{usuario_id}}"] }
+          }
+        },
+        {
+          "name": "Eliminar usuario",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/api/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["api", "usuarios", "{{usuario_id}}"] }
+          }
+        },
+        {
+          "name": "Listar SIN token -> debe dar 401",
+          "auth": { "type": "noauth" },
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/usuarios", "host": ["{{base_url}}"], "path": ["api", "usuarios"] }
+          }
+        }
+      ]
+    }
+  ]
+}

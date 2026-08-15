@@ -7,7 +7,7 @@
 // REACT_APP_API_URL sigue funcionando como override explícito si alguna
 // vez lo necesitas (por ejemplo, backend detrás de un dominio distinto).
 const PUERTO_BACKEND = process.env.REACT_APP_API_PORT || 8001;
-const API_URL = process.env.REACT_APP_API_URL || `${window.location.protocol}//${window.location.hostname}:${PUERTO_BACKEND}`;
+export const API_URL = process.env.REACT_APP_API_URL || `${window.location.protocol}//${window.location.hostname}:${PUERTO_BACKEND}`;
 
 /**
  * Wrapper sobre fetch que:

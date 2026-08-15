@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { reiniciarAplicacion } from '../services/api';
+import { reiniciarAplicacion, API_URL } from '../services/api';
 import { cue, CUES } from '../lib/sound';
 import { PORTFOLIO_URL } from '../config/links';
 
@@ -8,7 +8,10 @@ import { PORTFOLIO_URL } from '../config/links';
 // local ahora, el VPS el día que se despliegue — nunca en un tercero.
 // vista/public/docs se sirve automaticamente (dev con CRA, y queda
 // empacado dentro de build/ al correr "npm run build" para producción).
-const URL_TESTING = process.env.REACT_APP_TESTING_URL || `${window.location.origin}/docs/`;
+// Incluye PUBLIC_URL porque en producción la app vive bajo /proyectos/libreta,
+// no en la raíz del dominio (en dev, PUBLIC_URL es '' y no cambia nada).
+const URL_TESTING = process.env.REACT_APP_TESTING_URL
+    || `${window.location.origin}${process.env.PUBLIC_URL}/docs/`;
 
 const Navbar = ({ brand, onReiniciado }) => {
 
@@ -65,6 +68,17 @@ const Navbar = ({ brand, onReiniciado }) => {
                         data-cuelume-release
                     >
                         Reportes de testing
+                    </a>
+
+                    <a
+                        href={`${API_URL}/api/testing/postman-collection`}
+                        className="btn btn-ghost btn-ghost-claro"
+                        data-testid="link-postman"
+                        data-cuelume-press
+                        data-cuelume-release
+                        title="Descarga la colección lista para importar en Postman"
+                    >
+                        Testing manual con Postman
                     </a>
 
                     {estaAutenticado && (
