@@ -11,7 +11,11 @@ initSound();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    {/* PUBLIC_URL es '' en dev (npm start siempre sirve desde la raíz,
+        homepage no lo afecta) y '/proyectos/libreta' en el build de
+        producción — así las rutas funcionan en los dos casos sin tocar
+        nada a mano. */}
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <App />
     </BrowserRouter>
   </React.StrictMode>
