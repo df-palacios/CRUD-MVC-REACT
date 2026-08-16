@@ -23,6 +23,8 @@ const Usuario = db.define('Usuario',{
     ciudad:{
         type: DataTypes.STRING
     },
+}, {
+    tableName: 'usuarios'
 })
 
 export default Usuario;
