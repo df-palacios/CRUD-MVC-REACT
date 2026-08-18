@@ -1,5 +1,8 @@
 import { Page, Locator } from '@playwright/test';
 
+// Page Object para /login. auth.setup.ts la usa para generar la sesión
+// guardada que reusan el resto de tests; auth.spec.ts la usa directamente
+// para probar los distintos flujos de login/logout.
 export class LoginPage {
 
     readonly page: Page;

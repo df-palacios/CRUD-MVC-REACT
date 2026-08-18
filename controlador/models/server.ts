@@ -5,6 +5,8 @@ import testingRoutes from '../routes/testing'
 import cors from 'cors'
 import db from '../db/connection';
 
+// Envuelve la app de Express: arma middlewares, rutas y conexión a la BD
+// en el constructor, y expone listen() para arrancar el servidor HTTP.
 class Server{
 
     private app:express.Application;
@@ -24,6 +26,9 @@ class Server{
         this.routes();
     }
 
+    // Solo verifica que las credenciales/host sean correctos (authenticate
+    // no crea conexiones persistentes ni tablas); si falla, se registra el
+    // error pero el servidor sigue levantando igual.
     async dbConnection(){
         try {
             await db.authenticate();

@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { crearUsuario, actualizarUsuario } from '../services/api';
 import { cue, CUES } from '../lib/sound';
 
-//esta funcion modifica el estado de una entrada de la libreta cuando se detecta un cambio en el formulario (evento)
+// Formulario único para crear y editar contactos: el modo lo decide
+// modoEdicionId (null = crear). El estado del formulario vive en el padre
+// (App.js) porque "Editar" necesita poder precargarlo desde afuera.
 const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar, onGuardado }) => {
 
     const [error, setError] = useState(null);
 
+    // actualiza el campo que cambió sin tocar el resto de la entrada
     const handleChange = e => {
         setEntrada({
             ...entrada,
@@ -30,6 +33,7 @@ const Form = ({ entrada, setEntrada, setListUpdated, modoEdicionId, onCancelar, 
 
         const payload = { ...entrada, telefonos, celular };
 
+        // mismo formulario para los dos casos: solo cambia qué endpoint se llama
         const { ok, data } = modoEdicionId
             ? await actualizarUsuario(modoEdicionId, payload)
             : await crearUsuario(payload);

@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { ContactosPage, Contacto } from '../pages/ContactosPage';
 
+// Estos tests corren ya autenticados: reusan la sesión guardada por
+// auth.setup.ts (ver dependencies: ['setup'] en playwright.config.ts).
+// Cada test usa un correo con Date.now() para no chocar con datos de
+// corridas anteriores ni entre sí.
 test.describe('CRUD de contactos', () => {
 
     test('crear un contacto y verlo en la tabla', async ({ page }) => {

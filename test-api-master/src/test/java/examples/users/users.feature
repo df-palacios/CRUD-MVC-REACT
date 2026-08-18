@@ -1,3 +1,6 @@
+# Cubre el CRUD completo de /api/usuarios contra un backend corriendo de
+# verdad (ver baseUrl en karate-config.js). Requiere estar autenticado,
+# por eso el Background hace login una sola vez con callonce.
 Feature: API Usuarios
 
   Background:

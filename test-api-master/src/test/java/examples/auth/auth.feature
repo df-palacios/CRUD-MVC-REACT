@@ -1,3 +1,6 @@
+# Cubre /api/auth/login y el rechazo de /api/usuarios sin (o con) token
+# inválido — es decir, valida tanto el login en sí como que validarJWT
+# efectivamente bloquee accesos no autorizados.
 Feature: Autenticación
 
   Background:

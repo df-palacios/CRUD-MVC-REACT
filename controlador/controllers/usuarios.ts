@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import Usuario from '../models/usuario';
 
+// CRUD de contactos ("usuarios" en la base de datos, ver models/usuario.ts).
+// Todo este router pasa antes por validarJWT (routes/usuario.ts), así que
+// aquí no hace falta revisar autenticación: si el código llega hasta acá,
+// el token ya es válido.
 
 // GET - obtener todos los usuarios
 export const getUsuarios = async (req: Request, res: Response) => {

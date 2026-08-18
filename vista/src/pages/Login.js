@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { cue, CUES } from '../lib/sound';
 
+// Si estas dos variables están definidas (típicamente en el demo público),
+// se muestra un botón para autocompletar credenciales de prueba; si no
+// están, el botón simplemente no se renderiza (ver más abajo).
 const DEMO_USER = process.env.REACT_APP_DEMO_USER;
 const DEMO_PASSWORD = process.env.REACT_APP_DEMO_PASSWORD;
 
@@ -15,6 +18,8 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // si ProtectedRoute nos mandó para acá desde una ruta protegida, volvemos
+    // ahí tras el login; si se entró directo a /login, vamos a la raíz
     const destino = location.state?.from?.pathname || '/';
 
     const handleSubmit = async (e) => {

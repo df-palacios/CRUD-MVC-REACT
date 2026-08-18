@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config({ quiet: true });
 
+// por defecto apunta al frontend en dev (npm start); se puede sobreescribir
+// con BASE_URL para correr los tests contra otro entorno (ej. el VPS)
 const baseURL = process.env.BASE_URL || 'http://localhost:3001';
 
 export default defineConfig({

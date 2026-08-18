@@ -10,6 +10,8 @@ export interface Contacto {
     ciudad: string;
 }
 
+// Page Object para la vista principal ("/"), donde vive la tabla de
+// contactos y el formulario de alta/edición. Usada por contactos.spec.ts.
 export class ContactosPage {
 
     readonly page: Page;
